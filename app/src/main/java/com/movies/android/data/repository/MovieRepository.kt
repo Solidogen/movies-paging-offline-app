@@ -37,4 +37,8 @@ class MovieRepository(
             // todo handle this
         }
     }
+
+    suspend fun getMovieById(movieId: Int): MovieDomain {
+        return movieDao.getMovieById(movieId = movieId).mapToDomain()
+    }
 }

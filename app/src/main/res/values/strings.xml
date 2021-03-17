@@ -7,4 +7,5 @@
     <string name="title_movie_details">Movie Details</string>
     <string name="movie_image_content_desc">Movie image</string>
     <string name="input_to_filter">Input text to filter…</string>
+    <string name="poster_image_content_desc">poster image</string>
 </resources>

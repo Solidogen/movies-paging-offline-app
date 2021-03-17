@@ -5,6 +5,7 @@ import com.movies.android.BuildConfig
 import com.movies.android.data.api.MovieApi
 import com.movies.android.data.database.MovieDatabase
 import com.movies.android.data.repository.MovieRepository
+import com.movies.android.ui.movies.details.MovieDetailsViewModel
 import com.movies.android.ui.movies.popularmovies.PopularMoviesViewModel
 import com.movies.android.util.ApiKeyInterceptor
 import com.movies.android.util.Injection
@@ -67,4 +68,5 @@ val appModule = module {
         )
     }
     viewModel { PopularMoviesViewModel(movieRepository = get()) }
+    viewModel { MovieDetailsViewModel(movieRepository = get()) }
 }

@@ -1,9 +1,6 @@
 package com.movies.android.data.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -14,4 +11,8 @@ interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(list: List<MovieEntity>)
+
+    @Transaction
+    @Query("SELECT * FROM movie WHERE movie.id = :movieId")
+    suspend fun getMovieById(movieId: Int): MovieEntity
 }
