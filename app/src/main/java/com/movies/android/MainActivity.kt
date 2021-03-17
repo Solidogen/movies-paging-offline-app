@@ -25,25 +25,26 @@ class MainActivity : AppCompatActivity() {
         setupBottomNavigationBar()
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        return currentNavController?.value?.navigateUp() ?: false
+    }
+
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNav)
-
-        val navGraphIds = listOf(R.navigation.movies_graph, R.navigation.profile_graph, R.navigation.settings_graph)
-
-        val controller = bottomNavigationView.setupWithNavController(
-                navGraphIds = navGraphIds,
-                fragmentManager = supportFragmentManager,
-                containerId = R.id.navHostContainer,
-                intent = intent
+        val navGraphIds = listOf(
+            R.navigation.movies_graph,
+            R.navigation.profile_graph,
+            R.navigation.settings_graph
         )
-
+        val controller = bottomNavigationView.setupWithNavController(
+            navGraphIds = navGraphIds,
+            fragmentManager = supportFragmentManager,
+            containerId = R.id.navHostContainer,
+            intent = intent
+        )
         controller.observe(this, { navController ->
             setupActionBarWithNavController(navController)
         })
         currentNavController = controller
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        return currentNavController?.value?.navigateUp() ?: false
     }
 }
