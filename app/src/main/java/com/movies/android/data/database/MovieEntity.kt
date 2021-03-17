@@ -8,5 +8,5 @@ import androidx.room.PrimaryKey
 data class MovieEntity(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "image_url") val imageUrl: String
+    @ColumnInfo(name = "poster_path") val posterPath: String?
 )

@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import java.util.*
 
 class PopularMoviesViewModel(
     private val movieRepository: MovieRepository
@@ -25,7 +26,7 @@ class PopularMoviesViewModel(
             if (filter.isEmpty()) {
                 movies
             } else {
-                movies.filter { it.title.contains(filter) }
+                movies.filter { it.title.toLowerCase(Locale.ROOT).contains(filter.toLowerCase(Locale.ROOT)) }
             }
         }.asLiveData()
 

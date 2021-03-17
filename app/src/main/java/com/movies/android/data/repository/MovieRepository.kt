@@ -5,6 +5,7 @@ import com.movies.android.data.database.MovieDao
 import com.movies.android.data.domain.MovieDomain
 import com.movies.android.data.mapper.mapToDomain
 import com.movies.android.data.mapper.mapToEntity
+import com.movies.android.util.bodyOrThrow
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -27,8 +28,8 @@ class MovieRepository(
 
     private suspend fun getFreshMovies() {
         try {
-            val freshMovies = movieApi.getMovies().body()!!
-            movieDao.insert(freshMovies.map { it.mapToEntity() })
+            val freshMovies = movieApi.getMovies().bodyOrThrow()
+            movieDao.insert(freshMovies.movies.orEmpty().map { it.mapToEntity() })
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

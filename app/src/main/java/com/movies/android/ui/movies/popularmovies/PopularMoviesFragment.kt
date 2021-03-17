@@ -37,7 +37,7 @@ class PopularMoviesFragment : Fragment(R.layout.fragment_popular_movies), KoinCo
             layoutManager = LinearLayoutManager(requireContext())
             adapter = moviesAdapter
         }
-        binding.searchEditText.addTextChangedListener { editable ->
+        binding.filterEditText.addTextChangedListener { editable ->
             editable?.toString()?.let { filterText ->
                 viewModel.setFilter(filterText = filterText)
             }

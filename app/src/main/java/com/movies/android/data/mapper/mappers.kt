@@ -7,11 +7,11 @@ import com.movies.android.data.domain.MovieDomain
 fun MovieEntity.mapToDomain(): MovieDomain = MovieDomain(
     id = id,
     title = title,
-    imageUrl = imageUrl
+    posterPath = posterPath
 )
 
 fun MovieDto.mapToEntity(): MovieEntity = MovieEntity(
     id = id,
     title = title,
-    imageUrl = imageUrl
+    posterPath = posterPath
 )

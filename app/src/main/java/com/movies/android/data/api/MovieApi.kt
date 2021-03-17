@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface MovieApi {
 
-    @GET("http://jsonplaceholder.typicode.com/todos/1")
-    suspend fun getMovies() : Response<List<MovieDto>>
+    @GET("/3/discover/movie")
+    suspend fun getMovies() : Response<PopularMoviesResponse>
 }

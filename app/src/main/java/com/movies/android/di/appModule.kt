@@ -6,6 +6,7 @@ import com.movies.android.data.api.MovieApi
 import com.movies.android.data.database.MovieDatabase
 import com.movies.android.data.repository.MovieRepository
 import com.movies.android.ui.movies.popularmovies.PopularMoviesViewModel
+import com.movies.android.util.ApiKeyInterceptor
 import com.movies.android.util.Injection
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -23,22 +24,24 @@ import java.util.concurrent.TimeUnit
 
 val appModule = module {
     single(named(Injection.NonCancellableScope)) { MainScope() }
+    single<Moshi> { Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build() }
+    single<Converter.Factory> { MoshiConverterFactory.create(get()) }
+    single<Retrofit.Builder> {
+        Retrofit.Builder()
+            .baseUrl("https://api.themoviedb.org/")
+            .addConverterFactory(get())
+    }
     single {
         HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         }
     }
-    single<Moshi> { Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build() }
-    single<Converter.Factory> { MoshiConverterFactory.create(get()) }
-    single<Retrofit.Builder> {
-        Retrofit.Builder()
-            .baseUrl("https://test.com")
-            .addConverterFactory(get())
-    }
+    single { ApiKeyInterceptor() }
     single {
         OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(get<ApiKeyInterceptor>())
             .addInterceptor(get<HttpLoggingInterceptor>())
             .build()
     }
