@@ -57,14 +57,10 @@ val appModule = module {
             .fallbackToDestructiveMigration()
             .build()
     }
-    single { get<MovieDatabase>().movieDao() }
     single {
         MovieRepository(
-            nonCancellableScope = get(
-                named(Injection.NonCancellableScope)
-            ),
-            movieDao = get(),
-            movieApi = get()
+            movieApi = get(),
+            moviesDatabase = get()
         )
     }
     viewModel { PopularMoviesViewModel(movieRepository = get()) }
