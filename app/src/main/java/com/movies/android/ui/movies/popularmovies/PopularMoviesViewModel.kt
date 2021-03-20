@@ -52,10 +52,7 @@ class PopularMoviesViewModel(
             }
             .onError {
                 Timber.e("Search results error: $it")
+                // todo show search error
             }
-    }
-
-    fun goToMovieDetails(movieId: Int) {
-        // todo livedata<event>
     }
 }

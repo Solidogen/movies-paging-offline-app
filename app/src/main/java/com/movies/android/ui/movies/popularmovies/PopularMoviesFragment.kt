@@ -72,12 +72,9 @@ class PopularMoviesFragment : Fragment(R.layout.fragment_popular_movies), KoinCo
     private fun setupView() {
         binding.popularMoviesRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            val createLoadStateAdapter = {
-                MoviesLoadStateAdapter(retryListener = { pagingAdapter.retry() })
-            }
             adapter = pagingAdapter.withLoadStateHeaderAndFooter(
-                header = createLoadStateAdapter.invoke(),
-                footer = createLoadStateAdapter.invoke()
+                header = MoviesLoadStateAdapter(retryListener = { pagingAdapter.retry() }),
+                footer = MoviesLoadStateAdapter(retryListener = { pagingAdapter.retry() })
             )
         }
         binding.searchResultsRecycler.apply {
@@ -92,7 +89,7 @@ class PopularMoviesFragment : Fragment(R.layout.fragment_popular_movies), KoinCo
         binding.popularMoviesSwipeRefreshLayout.setOnRefreshListener { pagingAdapter.refresh() }
     }
 
-    // todo - this should be testable from click to navigate action, so navigation event livedata
+    // todo - this should be testable from click to navigate action, so navigation event flow in viewmodel
     private fun goToMovieDetails(movieId: Int) {
         findNavController().navigate(
             PopularMoviesFragmentDirections.actionPopularMoviesToMovieDetails(movieId)
