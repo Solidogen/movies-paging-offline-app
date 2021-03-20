@@ -1,44 +1,47 @@
 package com.movies.android.data.repository
 
+import androidx.paging.*
 import com.movies.android.data.api.MovieApi
-import com.movies.android.data.database.MovieDao
+import com.movies.android.data.database.MovieDatabase
 import com.movies.android.data.domain.MovieDomain
 import com.movies.android.data.mapper.mapToDomain
-import com.movies.android.data.mapper.mapToEntity
+import com.movies.android.data.paging.PageKeyedRemoteMediator
+import com.movies.android.util.ApiResult
 import com.movies.android.util.bodyOrThrow
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.*
-import timber.log.Timber
-import java.lang.Exception
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class MovieRepository(
-    nonCancellableScope: CoroutineScope,
-    private val movieDao: MovieDao,
-    private val movieApi: MovieApi
-) {
+@OptIn(ExperimentalPagingApi::class)
+class MovieRepository(private val moviesDatabase: MovieDatabase, private val movieApi: MovieApi) {
 
-    val moviesFlow: SharedFlow<List<MovieDomain>> = movieDao.getMoviesFlow()
-        .map { it.map { it.mapToDomain() } }
-        .shareIn(nonCancellableScope, SharingStarted.WhileSubscribed(0))
-        .onSubscription {
-            getFreshMovies()
-            // todo what do I return here? Result for various cache/api errors, or just list?
-        }
+    val popularMoviesFlow: Flow<PagingData<MovieDomain>>
+        get() = Pager(
+            config = PagingConfig(pageSize = PAGE_SIZE),
+            remoteMediator = PageKeyedRemoteMediator(moviesDatabase, movieApi)
+        ) {
+            moviesDatabase.movieDao().getMoviesFlow()
+        }.flow.map { it.map { entity -> entity.mapToDomain() } }
 
-    private suspend fun getFreshMovies() {
-        try {
-            val freshMovies = movieApi.getMovies().bodyOrThrow()
-            movieDao.insert(freshMovies.movies.orEmpty().map { it.mapToEntity() })
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Timber.e(e)
-            // todo handle this
-        }
+    suspend fun getMovieById(movieId: Int): MovieDomain? =
+        moviesDatabase.movieDao().getMovieById(movieId = movieId)?.mapToDomain()
+
+    suspend fun searchForMovieTitle(title: String): ApiResult<List<MovieDomain>> = try {
+        ApiResult.Success(
+            movieApi.searchForMovieTitle(title = title)
+                .bodyOrThrow()
+                .movies
+                .orEmpty()
+                .map { it.mapToDomain() }
+        )
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        ApiResult.Error(e)
     }
 
-    suspend fun getMovieById(movieId: Int): MovieDomain {
-        return movieDao.getMovieById(movieId = movieId).mapToDomain()
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 }
+

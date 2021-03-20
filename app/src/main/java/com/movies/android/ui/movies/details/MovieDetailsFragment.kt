@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import coil.api.load
+import coil.load
 import com.movies.android.R
 import com.movies.android.databinding.FragmentMovieDetailsBinding
 import com.movies.android.util.viewBinding
@@ -25,7 +25,7 @@ class MovieDetailsFragment : Fragment(R.layout.fragment_movie_details) {
 
     private fun loadMovie(movieId: Int) {
         lifecycleScope.launchWhenCreated {
-            val movie = viewModel.getMovieById(movieId = movieId)
+            val movie = viewModel.getMovieById(movieId = movieId) ?: return@launchWhenCreated
             binding.titleTextView.text = movie.title
             binding.posterImageView.load(movie.imageUrl)
             binding.overviewTextView.text = movie.overview
