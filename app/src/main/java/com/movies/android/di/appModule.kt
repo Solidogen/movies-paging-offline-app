@@ -3,10 +3,13 @@ package com.movies.android.di
 import androidx.room.Room
 import com.movies.android.BuildConfig
 import com.movies.android.data.api.MovieApi
-import com.movies.android.data.database.MovieDatabase
+import com.movies.android.data.database.AppDatabase
+import com.movies.android.data.api.LikedProfilesApi
 import com.movies.android.data.repository.MovieRepository
+import com.movies.android.data.repository.LikedProfilesRepository
 import com.movies.android.ui.movies.details.MovieDetailsViewModel
 import com.movies.android.ui.movies.popularmovies.PopularMoviesViewModel
+import com.movies.android.ui.profile.LikedProfilesViewModel
 import com.movies.android.util.ApiKeyInterceptor
 import com.movies.android.util.Injection
 import com.squareup.moshi.Moshi
@@ -53,16 +56,24 @@ val appModule = module {
     }
     single<MovieApi> { get<Retrofit>().create(MovieApi::class.java) }
     single {
-        Room.databaseBuilder(androidContext(), MovieDatabase::class.java, "movie-database")
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "movie-database")
             .fallbackToDestructiveMigration()
             .build()
     }
+    single { LikedProfilesApi() }
     single {
         MovieRepository(
             movieApi = get(),
-            moviesDatabase = get()
+            appDatabase = get()
+        )
+    }
+    single {
+        LikedProfilesRepository(
+            appDatabase = get(),
+            likedProfilesApi = get()
         )
     }
     viewModel { PopularMoviesViewModel(movieRepository = get()) }
+    viewModel { LikedProfilesViewModel(likedProfilesRepository = get()) }
     viewModel { MovieDetailsViewModel(movieRepository = get()) }
 }

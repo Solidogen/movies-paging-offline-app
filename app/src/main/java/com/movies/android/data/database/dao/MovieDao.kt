@@ -8,7 +8,7 @@ import com.movies.android.data.database.entity.MovieEntity
 interface MovieDao {
 
     @Query("SELECT * FROM movies ORDER BY api_page_index")
-    fun getMoviesFlow(): PagingSource<Int, MovieEntity>
+    fun getMoviesPagingSource(): PagingSource<Int, MovieEntity>
 
     @Query("SELECT * FROM movies")
     fun getMovies(): List<MovieEntity>
@@ -26,3 +26,4 @@ interface MovieDao {
     @Update
     suspend fun updateMovies(list: List<MovieEntity>)
 }
+

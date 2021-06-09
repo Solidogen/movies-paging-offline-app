@@ -3,7 +3,7 @@ package com.movies.android.data.paging
 import androidx.paging.*
 import androidx.room.withTransaction
 import com.movies.android.data.api.MovieApi
-import com.movies.android.data.database.MovieDatabase
+import com.movies.android.data.database.AppDatabase
 import com.movies.android.data.database.entity.MovieEntity
 import com.movies.android.data.database.entity.RemoteKeyEntity
 import com.movies.android.data.mapper.mapToEntity
@@ -12,8 +12,8 @@ import kotlinx.coroutines.CancellationException
 import timber.log.Timber
 
 @OptIn(ExperimentalPagingApi::class)
-class PageKeyedRemoteMediator(
-    private val database: MovieDatabase,
+class PopularMoviesRemoteMediator(
+    private val database: AppDatabase,
     private val api: MovieApi
 ) : RemoteMediator<Int, MovieEntity>() {
 
@@ -54,7 +54,7 @@ class PageKeyedRemoteMediator(
                     )
                 )
                 movieDao.insert(movies.map { it.mapToEntity(apiPageIndex = data.page)}.also {
-                    Timber.d("Loaded movies: $it")
+                    Timber.d("Loaded movies: ${it.count()}")
                 })
             }
             return MediatorResult.Success(endOfPaginationReached = movies.isEmpty() || data.totalPages == data.page)
