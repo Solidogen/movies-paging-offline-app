@@ -56,4 +56,20 @@
         tools:listitem="@layout/item_popular_movie"
         tools:visibility="gone" />
 
+    <Button
+        android:id="@+id/deleteAllPopularMoviesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="delete all"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/changeNamesOfAllPopularMoviesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="change names"
+        app:layout_constraintBottom_toTopOf="@id/deleteAllPopularMoviesButton"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

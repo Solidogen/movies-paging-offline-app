@@ -40,6 +40,15 @@ class MovieRepository(private val moviesDatabase: MovieDatabase, private val mov
         ApiResult.Error(e)
     }
 
+    suspend fun deleteAllPopularMovies() {
+        moviesDatabase.movieDao().deleteAllPopularMovies()
+    }
+
+    suspend fun changeNamesOfAllPopularMovies() {
+        val movies = moviesDatabase.movieDao().getMovies()
+        moviesDatabase.movieDao().updateMovies(movies.map { it.copy(title = it.title + " (up)") })
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
     }

@@ -16,11 +16,14 @@ import com.movies.android.ui.movies.popularmovies.adapter.MoviesLoadStateAdapter
 import com.movies.android.ui.movies.popularmovies.adapter.PopularMoviesPagingAdapter
 import com.movies.android.util.MovieDisplayMode
 import com.movies.android.util.viewBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class PopularMoviesFragment : Fragment(R.layout.fragment_popular_movies), KoinComponent {
 
@@ -47,7 +50,11 @@ class PopularMoviesFragment : Fragment(R.layout.fragment_popular_movies), KoinCo
         }
         lifecycleScope.launchWhenCreated {
             pagingAdapter.loadStateFlow.collectLatest {
-                binding.popularMoviesSwipeRefreshLayout.isRefreshing = it.refresh is LoadState.Loading
+                try {
+                    binding.popularMoviesSwipeRefreshLayout.isRefreshing = it.refresh is LoadState.Loading
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
             }
         }
         lifecycleScope.launchWhenCreated {
@@ -81,6 +88,8 @@ class PopularMoviesFragment : Fragment(R.layout.fragment_popular_movies), KoinCo
             }
         }
         binding.popularMoviesSwipeRefreshLayout.setOnRefreshListener { pagingAdapter.refresh() }
+        binding.deleteAllPopularMoviesButton.setOnClickListener { viewModel.deleteAllPopularMovies() }
+        binding.changeNamesOfAllPopularMoviesButton.setOnClickListener { viewModel.changeNamesOfAllPopularMovies() }
     }
 
     // todo - this should be testable from click to navigate action, so navigation event flow in viewmodel

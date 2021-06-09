@@ -7,6 +7,7 @@ import androidx.paging.cachedIn
 import com.movies.android.data.domain.MovieDomain
 import com.movies.android.data.repository.MovieRepository
 import com.movies.android.util.MovieDisplayMode
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
@@ -55,5 +56,13 @@ class PopularMoviesViewModel(
                 Timber.e("Search results error: $it")
                 // todo show search error
             }
+    }
+
+    fun deleteAllPopularMovies() {
+        viewModelScope.launch(Dispatchers.IO) { movieRepository.deleteAllPopularMovies() }
+    }
+
+    fun changeNamesOfAllPopularMovies() {
+        viewModelScope.launch(Dispatchers.IO) { movieRepository.changeNamesOfAllPopularMovies() }
     }
 }
