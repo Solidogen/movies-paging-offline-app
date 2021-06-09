@@ -15,8 +15,8 @@ import kotlinx.coroutines.flow.map
 @OptIn(ExperimentalPagingApi::class)
 class MovieRepository(private val moviesDatabase: MovieDatabase, private val movieApi: MovieApi) {
 
-    val popularMoviesFlow: Flow<PagingData<MovieDomain>>
-        get() = Pager(
+    val popularMoviesFlow: Flow<PagingData<MovieDomain>> =
+        Pager(
             config = PagingConfig(pageSize = PAGE_SIZE),
             remoteMediator = PageKeyedRemoteMediator(moviesDatabase, movieApi)
         ) {

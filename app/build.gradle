@@ -84,7 +84,7 @@ dependencies {
     def coil_version = '1.0.0'
     implementation "io.coil-kt:coil:$coil_version"
 
-    def paging_version = '3.0.0-beta01'
+    def paging_version = '3.0.0'
     implementation "androidx.paging:paging-runtime:$paging_version"
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"

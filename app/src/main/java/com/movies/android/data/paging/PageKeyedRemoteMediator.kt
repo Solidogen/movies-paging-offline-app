@@ -39,7 +39,7 @@ class PageKeyedRemoteMediator(
                     remoteKey.nextPage
                 }
             }
-            Timber.d("Loading with load key: $loadKey")
+            Timber.d("Loading with load key: $loadKey, load type: $loadType")
             val data = api.getPopularMovies(loadKey).bodyOrThrow()
             val movies = data.movies.orEmpty()
             database.withTransaction {

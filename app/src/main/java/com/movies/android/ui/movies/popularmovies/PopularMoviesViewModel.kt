@@ -3,6 +3,7 @@ package com.movies.android.ui.movies.popularmovies
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.movies.android.data.domain.MovieDomain
 import com.movies.android.data.repository.MovieRepository
 import com.movies.android.util.MovieDisplayMode
@@ -20,8 +21,8 @@ class PopularMoviesViewModel(
     private val mutableSearchResultsFlow: MutableStateFlow<List<MovieDomain>> =
         MutableStateFlow(emptyList())
 
-    val popularMoviesFlow: Flow<PagingData<MovieDomain>>
-        get() = movieRepository.popularMoviesFlow
+    val popularMoviesFlow: Flow<PagingData<MovieDomain>> =
+        movieRepository.popularMoviesFlow.cachedIn(viewModelScope)
 
     val searchResultsFlow: Flow<List<MovieDomain>>
         get() = mutableSearchResultsFlow

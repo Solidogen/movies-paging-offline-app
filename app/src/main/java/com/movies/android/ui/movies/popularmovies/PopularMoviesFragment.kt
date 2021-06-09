@@ -51,12 +51,6 @@ class PopularMoviesFragment : Fragment(R.layout.fragment_popular_movies), KoinCo
             }
         }
         lifecycleScope.launchWhenCreated {
-            pagingAdapter.loadStateFlow
-                .distinctUntilChangedBy { it.refresh }
-                .filter { it.refresh is LoadState.NotLoading }
-                .collectLatest { binding.popularMoviesRecycler.scrollToPosition(0) }
-        }
-        lifecycleScope.launchWhenCreated {
             viewModel.searchResultsFlow.collectLatest {
                 searchAdapter.submitList(it)
             }
