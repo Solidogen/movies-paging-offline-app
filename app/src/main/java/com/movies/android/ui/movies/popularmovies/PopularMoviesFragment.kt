@@ -49,15 +49,6 @@ class PopularMoviesFragment : Fragment(R.layout.fragment_popular_movies), KoinCo
             }
         }
         lifecycleScope.launchWhenCreated {
-            pagingAdapter.loadStateFlow.collectLatest {
-                try {
-                    binding.popularMoviesSwipeRefreshLayout.isRefreshing = it.refresh is LoadState.Loading
-                } catch (e: Exception) {
-                    Timber.e(e)
-                }
-            }
-        }
-        lifecycleScope.launchWhenCreated {
             viewModel.searchResultsFlow.collectLatest {
                 searchAdapter.submitList(it)
             }
@@ -71,6 +62,15 @@ class PopularMoviesFragment : Fragment(R.layout.fragment_popular_movies), KoinCo
     }
 
     private fun setupView() {
+        lifecycleScope.launchWhenCreated {
+            pagingAdapter.loadStateFlow.collectLatest {
+                try {
+                    binding.popularMoviesSwipeRefreshLayout.isRefreshing = it.refresh is LoadState.Loading
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
+        }
         binding.popularMoviesRecycler.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = pagingAdapter.withLoadStateHeaderAndFooter(

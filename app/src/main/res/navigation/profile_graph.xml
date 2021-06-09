@@ -8,8 +8,8 @@
 
     <fragment
             android:id="@+id/profile_fragment"
-            android:name="com.movies.android.ui.profile.ProfileFragment"
+            android:name="com.movies.android.ui.profile.LikedProfilesFragment"
             android:label="@string/title_profile"
-            tools:layout="@layout/fragment_profile">
+            tools:layout="@layout/fragment_profiles">
     </fragment>
 </navigation>
